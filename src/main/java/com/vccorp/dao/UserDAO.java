@@ -1,19 +1,22 @@
-package com.vccorp.service;
+package com.vccorp.dao;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import com.vccorp.dto.UserDTO;
 
-public interface UserService {
+public interface UserDAO {
+
+	UserDTO findOneById(Long id);
+
+	UserDTO findOneByEmail(String email);
 
 	List<UserDTO> findAll();
- 
+
 	UserDTO save(UserDTO userDTO);
 
 	String delete(String email);
 
-	UserDTO update(UserDTO userDTO) throws FileNotFoundException;
+	UserDTO update(UserDTO userDTO);
 
 	List<UserDTO> findByName(String name);
 

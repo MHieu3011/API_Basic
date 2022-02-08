@@ -1,34 +1,33 @@
 package com.vccorp.service.impl;
 
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.vccorp.convert.UserConvert;
+import com.vccorp.dao.UserDAO;
 import com.vccorp.dto.UserDTO;
-import com.vccorp.entity.UserEntity;
-import com.vccorp.repository.UserRepository;
 import com.vccorp.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
+//	@Autowired
+//	private UserRepository userRepository;
+
 	@Autowired
-	private UserRepository userRepository;
+	private UserDAO userDAO;
 
 	@Override
 	public List<UserDTO> findAll() {
-		List<UserDTO> results = new ArrayList<>();
-		List<UserEntity> entities = userRepository.findAll();
-		for (UserEntity userEntity : entities) {
-			results.add(UserConvert.toDTO(userEntity));
-		}
-		return results;
+//		List<UserDTO> results = new ArrayList<>();
+//		List<UserEntity> entities = userRepository.findAll();
+//		for (UserEntity userEntity : entities) {
+//			results.add(UserConvert.toDTO(userEntity));
+//		}
+//		return results;
+		return userDAO.findAll();
 	}
 
 	public boolean checkEmail(String email, List<UserDTO> users) {
@@ -41,76 +40,83 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public UserDTO save(UserDTO userDTO) {
 		List<UserDTO> users = findAll();
 		String email = userDTO.getEmail();
-		if (checkEmail(email, users)) {
-			return UserConvert.toDTO(userRepository.findOneByEmail(email));
-		} else {
-			UserEntity entity = UserConvert.toEntity(userDTO);
-			return UserConvert.toDTO(userRepository.save(entity));
+		if (checkEmail(email, users)) {	//user da ton tai tra ve user cu
+//			return UserConvert.toDTO(userRepository.findOneByEmail(email));
+			return userDAO.findOneByEmail(email);
+		} else {	//them user moi
+//			UserEntity entity = UserConvert.toEntity(userDTO);
+//			return UserConvert.toDTO(userRepository.save(entity));
+			return userDAO.save(userDTO);
 		}
 	}
 
 	@Override
-	@Transactional
+//	@Transactional
 	public String delete(String email) {
 		List<UserDTO> users = findAll();
-		UserEntity entity = userRepository.findOneByEmail(email);
+//		UserEntity entity = userRepository.findOneByEmail(email);
 		String result;
 		if (checkEmail(email, users)) {
-			userRepository.delete(entity);
-			result = "Xóa thành công user: " + email;
+//			userRepository.delete(entity);
+			userDAO.delete(email);
+			result = "delete success" + email;
 		} else {
-			result = "Không tìm thấy user: " + email;
+			result = "no user has " + email;
 		}
 		return result;
 	}
 
 	@Override
-	@Transactional
-	public UserDTO update(UserDTO userDTO) throws Exception {
+//	@Transactional
+	public UserDTO update(UserDTO userDTO) throws FileNotFoundException {
 		List<UserDTO> users = findAll();
 		String email = userDTO.getEmail();
-		if (checkEmail(email, users)) {
-			UserEntity entity = userRepository.findOneByEmail(userDTO.getEmail());
-			entity = UserConvert.toEntity(userDTO, entity);
-			userRepository.save(entity);
-			return UserConvert.toDTO(entity);
-		} else {
-			throw new Exception("User không tồn tại");
+		if (checkEmail(email, users)) {	//user da ton tai thi update
+//			UserEntity entity = userRepository.findOneByEmail(userDTO.getEmail());
+//			entity = UserConvert.toEntity(userDTO, entity);
+//			userRepository.save(entity);
+//			return UserConvert.toDTO(entity);
+			return userDAO.update(userDTO);
+		} else {	//chua ton tai user -> error
+			throw new FileNotFoundException("User not found");
 		}
 	}
 
 	@Override
 	public List<UserDTO> findByName(String name) {
-		List<UserDTO> results = new ArrayList<>();
-		List<UserEntity> entities = userRepository.findByName(name);
-		for (UserEntity userEntity : entities) {
-			results.add(UserConvert.toDTO(userEntity));
-		}
-		return results;
+//		List<UserDTO> results = new ArrayList<>();
+//		List<UserEntity> entities = userRepository.findByName(name);
+//		for (UserEntity userEntity : entities) {
+//			results.add(UserConvert.toDTO(userEntity));
+//		}
+//		return results;
+		return userDAO.findByName(name);
 	}
 
 	@Override
 	public List<UserDTO> findByAddress(String address) {
-		List<UserDTO> results = new ArrayList<>();
-		List<UserEntity> entities = userRepository.findByAddress(address);
-		for (UserEntity userEntity : entities) {
-			results.add(UserConvert.toDTO(userEntity));
-		}
-		return results;
+//		List<UserDTO> results = new ArrayList<>();
+//		List<UserEntity> entities = userRepository.findByAddress(address);
+//		for (UserEntity userEntity : entities) {
+//			results.add(UserConvert.toDTO(userEntity));
+//		}
+//		return results;
+		return userDAO.findByAddress(address);
 	}
 
 	@Override
 	public List<UserDTO> findAllBySortName() {
-		Sort sort = Sort.by("name").ascending();
-		List<UserDTO> results = new ArrayList<>();
-		List<UserEntity> entities = userRepository.findAll(sort);
-		for (UserEntity userEntity : entities) {
-			results.add(UserConvert.toDTO(userEntity));
-		}
-		return results;
+//		Sort sort = Sort.by("name").ascending();
+//		List<UserDTO> results = new ArrayList<>();
+//		List<UserEntity> entities = userRepository.findAll(sort);
+//		for (UserEntity userEntity : entities) {
+//			results.add(UserConvert.toDTO(userEntity));
+//		}
+//		return results;
+		return userDAO.findAllBySortName();
 	}
 }

@@ -2,6 +2,7 @@ package com.vccorp.api;
 
 import java.util.List;
 
+import javax.naming.ContextNotEmptyException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class UserAPI {
 	private UserService userService;
 
 	@PostMapping
-	public UserDTO save(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws Exception {
+	public UserDTO save(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws ContextNotEmptyException {
 		if (bindingResult.hasErrors()) {
-			throw new Exception("Dữ liệu nhập vào không đúng vui lòng kiểm tra lại!");
+			throw new ContextNotEmptyException("name and address not empty, 1<age<100");
 		}
 		return userService.save(userDTO);
 	}
@@ -41,7 +42,7 @@ public class UserAPI {
 	@PutMapping
 	public UserDTO update(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws Exception {
 		if (bindingResult.hasErrors()) {
-			throw new Exception("Dữ liệu nhập vào không đúng vui lòng kiểm tra lại!");
+			throw new ContextNotEmptyException("name and address not empty, 1<age<100");
 		}
 		return userService.update(userDTO);
 	}
