@@ -20,7 +20,7 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(SQLException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	public ErrorMessage sqlException(Exception ex, WebRequest request) {
-		return new ErrorMessage(500, "SQL Exception");
+		return new ErrorMessage(501, "SQL Exception");
 	}
 
 }

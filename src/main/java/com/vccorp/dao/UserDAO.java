@@ -3,24 +3,25 @@ package com.vccorp.dao;
 import java.util.List;
 
 import com.vccorp.dto.UserDTO;
+import com.vccorp.model.UserModel;
 
 public interface UserDAO {
 
-	UserDTO findOneById(Long id);
+	UserModel findOneById(Long id);
 
-	UserDTO findOneByEmail(String email);
+	UserModel findOneByEmail(String email);
 
-	List<UserDTO> findAll();
+	List<UserModel> findAll();
 
-	UserDTO save(UserDTO userDTO);
+	UserModel save(UserDTO userDTO);
 
 	String delete(String email);
 
-	UserDTO update(UserDTO userDTO);
+	UserModel update(UserDTO userDTO);
 
-	List<UserDTO> findByName(String name);
+	List<UserModel> findByName(String name);
 
-	List<UserDTO> findByAddress(String address);
+	List<UserModel> findByAddress(String address);
 
-	List<UserDTO> findAllBySortName();
+	List<UserModel> findAllBySortName();
 }

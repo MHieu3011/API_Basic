@@ -1,23 +1,22 @@
 package com.vccorp.service;
 
-import java.io.FileNotFoundException;
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 import com.vccorp.dto.UserDTO;
 
 public interface UserService {
 
-	List<UserDTO> findAll();
- 
-	UserDTO save(UserDTO userDTO);
+	ResponseEntity<String> findAll();
 
-	String delete(String email);
+	ResponseEntity<String> save(UserDTO userDTO);
 
-	UserDTO update(UserDTO userDTO) throws FileNotFoundException;
+	ResponseEntity<String> delete(String email);
 
-	List<UserDTO> findByName(String name);
+	ResponseEntity<String> update(UserDTO userDTO);
 
-	List<UserDTO> findByAddress(String address);
+	ResponseEntity<String> findByName(String name);
 
-	List<UserDTO> findAllBySortName();
+	ResponseEntity<String> findByAddress(String address);
+
+	ResponseEntity<String> findAllBySortName();
 }

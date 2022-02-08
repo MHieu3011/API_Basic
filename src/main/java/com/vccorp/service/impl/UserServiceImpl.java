@@ -1,38 +1,39 @@
 package com.vccorp.service.impl;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.vccorp.convert.UserConvert;
 import com.vccorp.dao.UserDAO;
 import com.vccorp.dto.UserDTO;
+import com.vccorp.model.UserModel;
 import com.vccorp.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-//	@Autowired
-//	private UserRepository userRepository;
-
 	@Autowired
 	private UserDAO userDAO;
 
 	@Override
-	public List<UserDTO> findAll() {
-//		List<UserDTO> results = new ArrayList<>();
-//		List<UserEntity> entities = userRepository.findAll();
-//		for (UserEntity userEntity : entities) {
-//			results.add(UserConvert.toDTO(userEntity));
-//		}
-//		return results;
-		return userDAO.findAll();
+	public ResponseEntity<String> findAll() {
+		StringBuilder result = new StringBuilder();
+		List<UserModel> users = userDAO.findAll();
+		result.append("[");
+		for (UserModel user : users) {
+			result.append("\n" + UserConvert.toString(user));
+		}
+		result.append("\n]");
+		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
 	}
 
-	public boolean checkEmail(String email, List<UserDTO> users) {
-		for (UserDTO userDTO : users) {
-			if (userDTO.getEmail().equals(email)) {
+	public boolean checkEmail(String email, List<UserModel> users) {
+		for (UserModel user : users) {
+			if (user.getEmail().equals(email)) {
 				return true;
 			}
 		}
@@ -40,83 +41,76 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-//	@Transactional
-	public UserDTO save(UserDTO userDTO) {
-		List<UserDTO> users = findAll();
+	public ResponseEntity<String> save(UserDTO userDTO) {
+		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
-		if (checkEmail(email, users)) {	//user da ton tai tra ve user cu
-//			return UserConvert.toDTO(userRepository.findOneByEmail(email));
-			return userDAO.findOneByEmail(email);
-		} else {	//them user moi
-//			UserEntity entity = UserConvert.toEntity(userDTO);
-//			return UserConvert.toDTO(userRepository.save(entity));
-			return userDAO.save(userDTO);
+		if (checkEmail(email, users)) { // user da ton tai tra ve user cu
+			UserModel model = userDAO.findOneByEmail(email);
+			return new ResponseEntity<>(UserConvert.toString(model), HttpStatus.BAD_REQUEST);
+		} else { // them user moi
+			UserModel model = userDAO.save(userDTO);
+			return new ResponseEntity<>(UserConvert.toString(model), HttpStatus.OK);
 		}
 	}
 
 	@Override
-//	@Transactional
-	public String delete(String email) {
-		List<UserDTO> users = findAll();
-//		UserEntity entity = userRepository.findOneByEmail(email);
+	public ResponseEntity<String> delete(String email) {
+		List<UserModel> users = userDAO.findAll();
 		String result;
-		if (checkEmail(email, users)) {
-//			userRepository.delete(entity);
+		if (checkEmail(email, users)) { // user da ton tai -> delete
 			userDAO.delete(email);
 			result = "delete success" + email;
-		} else {
+		} else { // no user -> error
 			result = "no user has " + email;
 		}
-		return result;
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@Override
-//	@Transactional
-	public UserDTO update(UserDTO userDTO) throws FileNotFoundException {
-		List<UserDTO> users = findAll();
+	public ResponseEntity<String> update(UserDTO userDTO) {
+		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
-		if (checkEmail(email, users)) {	//user da ton tai thi update
-//			UserEntity entity = userRepository.findOneByEmail(userDTO.getEmail());
-//			entity = UserConvert.toEntity(userDTO, entity);
-//			userRepository.save(entity);
-//			return UserConvert.toDTO(entity);
-			return userDAO.update(userDTO);
-		} else {	//chua ton tai user -> error
-			throw new FileNotFoundException("User not found");
+		if (checkEmail(email, users)) { // user da ton tai thi update
+			UserModel model = userDAO.update(userDTO);
+			return new ResponseEntity<>(UserConvert.toString(model), HttpStatus.OK);
+		} else { // chua ton tai user -> error
+			return new ResponseEntity<>("NOT FOUND", HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@Override
-	public List<UserDTO> findByName(String name) {
-//		List<UserDTO> results = new ArrayList<>();
-//		List<UserEntity> entities = userRepository.findByName(name);
-//		for (UserEntity userEntity : entities) {
-//			results.add(UserConvert.toDTO(userEntity));
-//		}
-//		return results;
-		return userDAO.findByName(name);
+	public ResponseEntity<String> findByName(String name) {
+		StringBuilder result = new StringBuilder();
+		List<UserModel> users = userDAO.findByName(name);
+		result.append("[");
+		for (UserModel user : users) {
+			result.append("\n" + UserConvert.toString(user));
+		}
+		result.append("\n]");
+		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
 	}
 
 	@Override
-	public List<UserDTO> findByAddress(String address) {
-//		List<UserDTO> results = new ArrayList<>();
-//		List<UserEntity> entities = userRepository.findByAddress(address);
-//		for (UserEntity userEntity : entities) {
-//			results.add(UserConvert.toDTO(userEntity));
-//		}
-//		return results;
-		return userDAO.findByAddress(address);
+	public ResponseEntity<String> findByAddress(String address) {
+		StringBuilder result = new StringBuilder();
+		List<UserModel> users = userDAO.findByAddress(address);
+		result.append("[");
+		for (UserModel user : users) {
+			result.append("\n" + UserConvert.toString(user));
+		}
+		result.append("\n]");
+		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
 	}
 
 	@Override
-	public List<UserDTO> findAllBySortName() {
-//		Sort sort = Sort.by("name").ascending();
-//		List<UserDTO> results = new ArrayList<>();
-//		List<UserEntity> entities = userRepository.findAll(sort);
-//		for (UserEntity userEntity : entities) {
-//			results.add(UserConvert.toDTO(userEntity));
-//		}
-//		return results;
-		return userDAO.findAllBySortName();
+	public ResponseEntity<String> findAllBySortName() {
+		StringBuilder result = new StringBuilder();
+		List<UserModel> users = userDAO.findAllBySortName();
+		result.append("[");
+		for (UserModel user : users) {
+			result.append("\n" + UserConvert.toString(user));
+		}
+		result.append("\n]");
+		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
 	}
 }

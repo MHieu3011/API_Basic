@@ -1,11 +1,10 @@
 package com.vccorp.api;
 
-import java.util.List;
-
 import javax.naming.ContextNotEmptyException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,8 @@ public class UserAPI {
 	private UserService userService;
 
 	@PostMapping
-	public UserDTO save(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws ContextNotEmptyException {
+	public ResponseEntity<String> save(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult)
+			throws ContextNotEmptyException {
 		if (bindingResult.hasErrors()) {
 			throw new ContextNotEmptyException("name and address not empty, 1<age<100");
 		}
@@ -35,12 +35,13 @@ public class UserAPI {
 	}
 
 	@DeleteMapping
-	public String delete(@RequestParam String email) {
+	public ResponseEntity<String> delete(@RequestParam String email) {
 		return userService.delete(email);
 	}
 
 	@PutMapping
-	public UserDTO update(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws Exception {
+	public ResponseEntity<String> update(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult)
+			throws ContextNotEmptyException {
 		if (bindingResult.hasErrors()) {
 			throw new ContextNotEmptyException("name and address not empty, 1<age<100");
 		}
@@ -48,17 +49,17 @@ public class UserAPI {
 	}
 
 	@GetMapping(params = "name")
-	public List<UserDTO> findByName(@RequestParam String name) {
+	public ResponseEntity<String> findByName(@RequestParam String name) {
 		return userService.findByName(name);
 	}
 
 	@GetMapping(params = "address")
-	public List<UserDTO> findByAddress(@RequestParam String address) {
+	public ResponseEntity<String> findByAddress(@RequestParam String address) {
 		return userService.findByAddress(address);
 	}
 
 	@GetMapping
-	public List<UserDTO> findAllBySortName() {
+	public ResponseEntity<String> findAllBySortName() {
 		return userService.findAllBySortName();
 	}
 }

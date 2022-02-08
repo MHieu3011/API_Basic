@@ -1,37 +1,17 @@
 package com.vccorp.convert;
 
-import com.vccorp.dto.UserDTO;
-import com.vccorp.entity.UserEntity;
+import com.vccorp.model.UserModel;
 
 public class UserConvert {
 
-	public static UserDTO toDTO(UserEntity entity) {
-		UserDTO dto = new UserDTO();
-		dto.setId(entity.getId());
-		dto.setName(entity.getName());
-		dto.setAddress(entity.getAddress());
-		dto.setAge(entity.getAge());
-		dto.setEmail(entity.getEmail());
-		dto.setCreatedDate(entity.getCreatedDate());
-		dto.setCreatedBy(entity.getCreatedBy());
-		dto.setModifiedDate(entity.getModifiedDate());
-		dto.setModifiedBy(entity.getModifiedBy());
-		return dto;
-	}
-
-	public static UserEntity toEntity(UserDTO dto) {
-		UserEntity entity = new UserEntity();
-		entity.setName(dto.getName());
-		entity.setAddress(dto.getAddress());
-		entity.setAge(dto.getAge());
-		entity.setEmail(dto.getEmail());
-		return entity;
-	}
-
-	public static UserEntity toEntity(UserDTO dto, UserEntity entity) {
-		entity.setName(dto.getName());
-		entity.setAddress(dto.getAddress());
-		entity.setAge(dto.getAge());
-		return entity;
+	public static String toString(UserModel model) {
+		StringBuilder result = new StringBuilder("{");
+		result.append("\n\t\"id\": " + model.getId());
+		result.append("\n\t\"name: " + model.getName());
+		result.append("\n\t\"address\": " + model.getAddress());
+		result.append("\n\t\"age\": " + model.getAge());
+		result.append("\n\t\"email\": " + model.getEmail());
+		result.append("\n}");
+		return result.toString();
 	}
 }

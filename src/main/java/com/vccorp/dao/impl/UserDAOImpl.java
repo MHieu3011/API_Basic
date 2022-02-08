@@ -7,32 +7,33 @@ import org.springframework.stereotype.Repository;
 import com.vccorp.dao.UserDAO;
 import com.vccorp.dto.UserDTO;
 import com.vccorp.mapper.impl.UserMapper;
+import com.vccorp.model.UserModel;
 
 @Repository
-public class UserDAOImpl extends AbstractDAO<UserDTO> implements UserDAO {
+public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 
 	@Override
-	public UserDTO findOneById(Long id) {
+	public UserModel findOneById(Long id) {
 		String sql = "SELECT * FROM user WHERE id = ?";
-		List<UserDTO> users = query(sql, new UserMapper(), id);
+		List<UserModel> users = query(sql, new UserMapper(), id);
 		return users.isEmpty() ? null : users.get(0);
 	}
 
 	@Override
-	public UserDTO findOneByEmail(String email) {
+	public UserModel findOneByEmail(String email) {
 		String sql = "SELECT * FROM user WHERE email = ?";
-		List<UserDTO> users = query(sql, new UserMapper(), email);
+		List<UserModel> users = query(sql, new UserMapper(), email);
 		return users.isEmpty() ? null : users.get(0);
 	}
 
 	@Override
-	public List<UserDTO> findAll() {
+	public List<UserModel> findAll() {
 		String sql = "SELECT * FROM user";
 		return query(sql, new UserMapper());
 	}
 
 	@Override
-	public UserDTO save(UserDTO userDTO) {
+	public UserModel save(UserDTO userDTO) {
 		StringBuilder sql = new StringBuilder("INSERT INTO user(name, address, age, email) ");
 		sql.append("VALUES(?, ?, ?, ?)");
 		Long id = insert(sql.toString(), userDTO.getName(), userDTO.getAddress(), userDTO.getAge(), userDTO.getEmail());
@@ -47,7 +48,7 @@ public class UserDAOImpl extends AbstractDAO<UserDTO> implements UserDAO {
 	}
 
 	@Override
-	public UserDTO update(UserDTO userDTO) {
+	public UserModel update(UserDTO userDTO) {
 		StringBuilder sql = new StringBuilder("UPDATE user SET name = ?, address = ?, ");
 		sql.append("age = ? WHERE email = ?");
 		update(sql.toString(), userDTO.getName(), userDTO.getAddress(), userDTO.getAge(), userDTO.getEmail());
@@ -55,19 +56,19 @@ public class UserDAOImpl extends AbstractDAO<UserDTO> implements UserDAO {
 	}
 
 	@Override
-	public List<UserDTO> findByName(String name) {
+	public List<UserModel> findByName(String name) {
 		String sql = "SELECT * FROM user WHERE name = ?";
 		return query(sql, new UserMapper(), name);
 	}
 
 	@Override
-	public List<UserDTO> findByAddress(String address) {
+	public List<UserModel> findByAddress(String address) {
 		String sql = "SELECT * FROM user WHERE address = ?";
 		return query(sql, new UserMapper(), address);
 	}
 
 	@Override
-	public List<UserDTO> findAllBySortName() {
+	public List<UserModel> findAllBySortName() {
 		String sql = "SELECT * FROM user ORDER BY name ASC";
 		return query(sql, new UserMapper());
 	}

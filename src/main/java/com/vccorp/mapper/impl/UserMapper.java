@@ -3,21 +3,21 @@ package com.vccorp.mapper.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.vccorp.dto.UserDTO;
 import com.vccorp.mapper.RowMapper;
+import com.vccorp.model.UserModel;
 
-public class UserMapper implements RowMapper<UserDTO> {
+public class UserMapper implements RowMapper<UserModel> {
 
 	@Override
-	public UserDTO mapRow(ResultSet resultSet) {
+	public UserModel mapRow(ResultSet resultSet) {
 		try {
-			UserDTO dto = new UserDTO();
-			dto.setId(resultSet.getLong("id"));
-			dto.setName(resultSet.getString("name"));
-			dto.setAddress(resultSet.getString("address"));
-			dto.setAge(resultSet.getInt("age"));
-			dto.setEmail(resultSet.getString("email"));
-			return dto;
+			UserModel model = new UserModel();
+			model.setId(resultSet.getLong("id"));
+			model.setName(resultSet.getString("name"));
+			model.setAddress(resultSet.getString("address"));
+			model.setAge(resultSet.getInt("age"));
+			model.setEmail(resultSet.getString("email"));
+			return model;
 		} catch (SQLException e) {
 			return null;
 		}
