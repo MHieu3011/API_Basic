@@ -1,22 +1,24 @@
 package com.vccorp.service;
 
-import org.springframework.http.ResponseEntity;
+import java.util.List;
+
+import javax.naming.NameNotFoundException;
 
 import com.vccorp.dto.UserDTO;
 
 public interface UserService {
 
-	ResponseEntity<String> findAll();
+	List<UserDTO> findAll();
 
-	ResponseEntity<String> save(UserDTO userDTO);
+	UserDTO save(UserDTO userDTO);
 
-	ResponseEntity<String> delete(String email);
+	String delete(String email);
 
-	ResponseEntity<String> update(UserDTO userDTO);
+	UserDTO update(UserDTO userDTO) throws NameNotFoundException;
 
-	ResponseEntity<String> findByName(String name);
+	List<UserDTO> findByName(String name);
 
-	ResponseEntity<String> findByAddress(String address);
+	List<UserDTO> findByAddress(String address);
 
-	ResponseEntity<String> findAllBySortName();
+	List<UserDTO> findAllBySortName();
 }

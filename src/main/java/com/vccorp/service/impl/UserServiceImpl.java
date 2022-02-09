@@ -1,10 +1,12 @@
 package com.vccorp.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NameNotFoundException;
+
+import org.hibernate.validator.internal.engine.messageinterpolation.parser.MessageDescriptorFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.vccorp.convert.UserConvert;
@@ -20,15 +22,13 @@ public class UserServiceImpl implements UserService {
 	private UserDAO userDAO;
 
 	@Override
-	public ResponseEntity<String> findAll() {
-		StringBuilder result = new StringBuilder();
+	public List<UserDTO> findAll() {
+		List<UserDTO> results = new ArrayList<>();
 		List<UserModel> users = userDAO.findAll();
-		result.append("[");
 		for (UserModel user : users) {
-			result.append("\n" + UserConvert.toString(user));
+			results.add(UserConvert.toDTO(user));
 		}
-		result.append("\n]");
-		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+		return results;
 	}
 
 	public boolean checkEmail(String email, List<UserModel> users) {
@@ -41,20 +41,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<String> save(UserDTO userDTO) {
+	public UserDTO save(UserDTO userDTO) {
 		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
+		if (userDTO.getName().isEmpty()) {
+			throw new MessageDescriptorFormatException("Name not empty");
+		} else if (userDTO.getAddress().isEmpty()) {
+			throw new MessageDescriptorFormatException("Address not empty");
+		} else if (userDTO.getAge() < 1 || userDTO.getAge() > 100) {
+			throw new MessageDescriptorFormatException(" 1 < age < 100");
+		}
 		if (checkEmail(email, users)) { // user da ton tai tra ve user cu
 			UserModel model = userDAO.findOneByEmail(email);
-			return new ResponseEntity<>(UserConvert.toString(model), HttpStatus.BAD_REQUEST);
+			return UserConvert.toDTO(model);
 		} else { // them user moi
 			UserModel model = userDAO.save(userDTO);
-			return new ResponseEntity<>(UserConvert.toString(model), HttpStatus.OK);
+			return UserConvert.toDTO(model);
 		}
 	}
 
 	@Override
-	public ResponseEntity<String> delete(String email) {
+	public String delete(String email) {
 		List<UserModel> users = userDAO.findAll();
 		String result;
 		if (checkEmail(email, users)) { // user da ton tai -> delete
@@ -63,54 +70,55 @@ public class UserServiceImpl implements UserService {
 		} else { // no user -> error
 			result = "no user has " + email;
 		}
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		return result;
 	}
 
 	@Override
-	public ResponseEntity<String> update(UserDTO userDTO) {
+	public UserDTO update(UserDTO userDTO) throws NameNotFoundException {
 		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
+		if (userDTO.getName().isEmpty()) {
+			throw new MessageDescriptorFormatException("Name not empty");
+		} else if (userDTO.getAddress().isEmpty()) {
+			throw new MessageDescriptorFormatException("Address not empty");
+		} else if (userDTO.getAge() < 1 || userDTO.getAge() > 100) {
+			throw new MessageDescriptorFormatException(" 1 < age < 100");
+		}
 		if (checkEmail(email, users)) { // user da ton tai thi update
 			UserModel model = userDAO.update(userDTO);
-			return new ResponseEntity<>(UserConvert.toString(model), HttpStatus.OK);
+			return UserConvert.toDTO(model);
 		} else { // chua ton tai user -> error
-			return new ResponseEntity<>("NOT FOUND", HttpStatus.NOT_FOUND);
+			throw new NameNotFoundException();
 		}
 	}
 
 	@Override
-	public ResponseEntity<String> findByName(String name) {
-		StringBuilder result = new StringBuilder();
+	public List<UserDTO> findByName(String name) {
+		List<UserDTO> results = new ArrayList<>();
 		List<UserModel> users = userDAO.findByName(name);
-		result.append("[");
 		for (UserModel user : users) {
-			result.append("\n" + UserConvert.toString(user));
+			results.add(UserConvert.toDTO(user));
 		}
-		result.append("\n]");
-		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+		return results;
 	}
 
 	@Override
-	public ResponseEntity<String> findByAddress(String address) {
-		StringBuilder result = new StringBuilder();
+	public List<UserDTO> findByAddress(String address) {
+		List<UserDTO> results = new ArrayList<>();
 		List<UserModel> users = userDAO.findByAddress(address);
-		result.append("[");
 		for (UserModel user : users) {
-			result.append("\n" + UserConvert.toString(user));
+			results.add(UserConvert.toDTO(user));
 		}
-		result.append("\n]");
-		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+		return results;
 	}
 
 	@Override
-	public ResponseEntity<String> findAllBySortName() {
-		StringBuilder result = new StringBuilder();
+	public List<UserDTO> findAllBySortName() {
+		List<UserDTO> results = new ArrayList<>();
 		List<UserModel> users = userDAO.findAllBySortName();
-		result.append("[");
 		for (UserModel user : users) {
-			result.append("\n" + UserConvert.toString(user));
+			results.add(UserConvert.toDTO(user));
 		}
-		result.append("\n]");
-		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+		return results;
 	}
 }
