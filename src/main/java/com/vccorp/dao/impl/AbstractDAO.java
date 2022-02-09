@@ -1,7 +1,6 @@
 package com.vccorp.dao.impl;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,22 +8,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vccorp.configuration.HikariConfiguration;
 import com.vccorp.dao.GenericDAO;
 import com.vccorp.mapper.RowMapper;
 
 public class AbstractDAO<T> implements GenericDAO<T> {
-
-	public Connection getConnection() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/apibasic";
-			String user = "root";
-			String password = "admin";
-			return DriverManager.getConnection(url, user, password);
-		} catch (ClassNotFoundException | SQLException e) {
-			return null;
-		}
-	}
 
 	public void setParameters(PreparedStatement statement, Object... parameters) {
 		try {
@@ -51,7 +39,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = getConnection();
+			connection = HikariConfiguration.getConnection();
 			statement = connection.prepareStatement(sql);
 			setParameters(statement, parameters);
 			resultSet = statement.executeQuery();
@@ -85,7 +73,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = getConnection();
+			connection = HikariConfiguration.getConnection();
 			connection.setAutoCommit(false);
 			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			setParameters(statement, parameters);
@@ -97,7 +85,9 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 			connection.commit();
 		} catch (SQLException e) {
 			try {
-				connection.rollback();
+				if (connection != null) {
+					connection.rollback();
+				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
@@ -125,7 +115,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = getConnection();
+			connection = HikariConfiguration.getConnection();
 			connection.setAutoCommit(false);
 			statement = connection.prepareStatement(sql);
 			setParameters(statement, parameters);
@@ -133,7 +123,9 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 			connection.commit();
 		} catch (SQLException e) {
 			try {
-				connection.rollback();
+				if (connection != null) {
+					connection.rollback();
+				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}

@@ -42,15 +42,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO save(UserDTO userDTO) {
+		if (userDTO.getName().isEmpty())
+			throw new MessageDescriptorFormatException("Name not empty");
+		if (userDTO.getAddress().isEmpty())
+			throw new MessageDescriptorFormatException("Address not empty");
+		if (userDTO.getAge() < 1 || userDTO.getAge() > 100)
+			throw new MessageDescriptorFormatException(" 1 < age < 100");
 		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
-		if (userDTO.getName().isEmpty()) {
-			throw new MessageDescriptorFormatException("Name not empty");
-		} else if (userDTO.getAddress().isEmpty()) {
-			throw new MessageDescriptorFormatException("Address not empty");
-		} else if (userDTO.getAge() < 1 || userDTO.getAge() > 100) {
-			throw new MessageDescriptorFormatException(" 1 < age < 100");
-		}
 		if (checkEmail(email, users)) { // user da ton tai tra ve user cu
 			UserModel model = userDAO.findOneByEmail(email);
 			return UserConvert.toDTO(model);
@@ -75,15 +74,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDTO update(UserDTO userDTO) throws NameNotFoundException {
+		if (userDTO.getName().isEmpty())
+			throw new MessageDescriptorFormatException("Name not empty");
+		if (userDTO.getAddress().isEmpty())
+			throw new MessageDescriptorFormatException("Address not empty");
+		if (userDTO.getAge() < 1 || userDTO.getAge() > 100)
+			throw new MessageDescriptorFormatException(" 1 < age < 100");
 		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
-		if (userDTO.getName().isEmpty()) {
-			throw new MessageDescriptorFormatException("Name not empty");
-		} else if (userDTO.getAddress().isEmpty()) {
-			throw new MessageDescriptorFormatException("Address not empty");
-		} else if (userDTO.getAge() < 1 || userDTO.getAge() > 100) {
-			throw new MessageDescriptorFormatException(" 1 < age < 100");
-		}
 		if (checkEmail(email, users)) { // user da ton tai thi update
 			UserModel model = userDAO.update(userDTO);
 			return UserConvert.toDTO(model);
