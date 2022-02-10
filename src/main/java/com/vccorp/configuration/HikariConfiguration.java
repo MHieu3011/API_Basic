@@ -2,11 +2,14 @@ package com.vccorp.configuration;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class HikariConfiguration {
+
+	private static HikariConfiguration configuration;
 
 	private static HikariConfig config = new HikariConfig();
 
@@ -15,19 +18,26 @@ public class HikariConfiguration {
 	private HikariConfiguration() {
 	}
 
+	private static ResourceBundle bundle = ResourceBundle.getBundle("dbconfig");
+
 	static {
-		config.setDriverClassName(DBConfiguration.DB_DRIVER);
-		config.setJdbcUrl(DBConfiguration.CONNECTION_URL);
-		config.setUsername(DBConfiguration.USER_NAME);
-		config.setPassword(DBConfiguration.PASSWORD);
-		config.setMinimumIdle(DBConfiguration.DB_MIN_CONNECTIONS);
-		config.setMaximumPoolSize(DBConfiguration.DB_MAX_CONNECTIONS);
+		config.setDriverClassName(bundle.getString("DB_DRIVER"));
+		config.setJdbcUrl(bundle.getString("CONNECTION_URL"));
+		config.setUsername(bundle.getString("USER_NAME"));
+		config.setPassword(bundle.getString("PASSWORD"));
+		config.setMinimumIdle(Integer.parseInt(bundle.getString("DB_MIN_CONNECTIONS")));
+		config.setMaximumPoolSize(Integer.parseInt(bundle.getString("DB_MAX_CONNECTIONS")));
+		hikari = new HikariDataSource(config);
 	}
 
-	public static Connection getConnection() throws SQLException {
-		if (hikari == null) {
-			hikari = new HikariDataSource(config);
-		}
+	public Connection getConnection() throws SQLException {
 		return hikari.getConnection();
+	}
+
+	public static HikariConfiguration getInstance() {
+		if (configuration == null) {
+			configuration = new HikariConfiguration();
+		}
+		return configuration;
 	}
 }

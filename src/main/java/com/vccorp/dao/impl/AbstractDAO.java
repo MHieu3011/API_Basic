@@ -39,7 +39,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = HikariConfiguration.getConnection();
+			connection = HikariConfiguration.getInstance().getConnection();
 			statement = connection.prepareStatement(sql);
 			setParameters(statement, parameters);
 			resultSet = statement.executeQuery();
@@ -73,7 +73,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = HikariConfiguration.getConnection();
+			connection = HikariConfiguration.getInstance().getConnection();
 			connection.setAutoCommit(false);
 			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			setParameters(statement, parameters);
@@ -115,7 +115,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = HikariConfiguration.getConnection();
+			connection = HikariConfiguration.getInstance().getConnection();
 			connection.setAutoCommit(false);
 			statement = connection.prepareStatement(sql);
 			setParameters(statement, parameters);
