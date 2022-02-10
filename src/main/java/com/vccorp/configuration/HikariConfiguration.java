@@ -12,6 +12,9 @@ public class HikariConfiguration {
 
 	private static HikariDataSource hikari;
 
+	private HikariConfiguration() {
+	}
+
 	static {
 		config.setDriverClassName(DBConfiguration.DB_DRIVER);
 		config.setJdbcUrl(DBConfiguration.CONNECTION_URL);
