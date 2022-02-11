@@ -11,31 +11,33 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import com.vccorp.api.ResponseAPICustom;
+
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorMessage handlerAllException(Exception ex, WebRequest request) {
-		return new ErrorMessage(500, "Exception Handler");
+	public ResponseAPICustom handlerAllException(Exception ex, WebRequest request) {
+		return new ResponseAPICustom(0, ex.getMessage(), 500, "");
 	}
 
 	@ExceptionHandler(SQLException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorMessage sqlException(SQLException ex, WebRequest request) {
-		return new ErrorMessage(501, "SQL Exception");
+	public ResponseAPICustom sqlException(SQLException ex, WebRequest request) {
+		return new ResponseAPICustom(0, ex.getMessage(), ex.getErrorCode(), "");
 	}
 
 	@ExceptionHandler(MessageDescriptorFormatException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorMessage notEmptyException(MessageDescriptorFormatException ex, WebRequest request) {
-		return new ErrorMessage(502, "name and address not empty, 1<age<100");
+	public ResponseAPICustom notEmptyException(MessageDescriptorFormatException ex, WebRequest request) {
+		return new ResponseAPICustom(0, ex.getMessage(), 502, "");
 	}
-	
+
 	@ExceptionHandler(NameNotFoundException.class)
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-	public ErrorMessage nameNotFoundException(NameNotFoundException ex, WebRequest request) {
-		return new ErrorMessage(503, "No user");
+	public ResponseAPICustom nameNotFoundException(NameNotFoundException ex, WebRequest request) {
+		return new ResponseAPICustom(0, ex.getMessage(), 503, "");
 	}
 
 }

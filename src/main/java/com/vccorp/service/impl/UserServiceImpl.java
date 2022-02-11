@@ -44,8 +44,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResponseAPICustom save(UserDTO userDTO) {
 		ResponseAPICustom response;
+		String str = "[a-zA-Z0-9]";
 		if (userDTO.getName().isEmpty()) {
 			response = new ResponseAPICustom(0, "Name not empty", 900, "");
+			return response;
+		}
+		if (!userDTO.getName().matches(str)) {
+			response = new ResponseAPICustom(0, "Name không được chứa ký tự đặc biệt", 900, userDTO.getName());
 			return response;
 		}
 		if (userDTO.getAddress().isEmpty()) {
