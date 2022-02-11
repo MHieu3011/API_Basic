@@ -1,24 +1,21 @@
 package com.vccorp.service;
 
-import java.util.List;
-
-import javax.naming.NameNotFoundException;
-
+import com.vccorp.api.ResponseAPICustom;
 import com.vccorp.dto.UserDTO;
 
 public interface UserService {
 
-	List<UserDTO> findAll();
+	ResponseAPICustom findAll();
 
-	UserDTO save(UserDTO userDTO);
+	ResponseAPICustom save(UserDTO userDTO);
 
-	String delete(String email);
+	ResponseAPICustom delete(String email);
 
-	UserDTO update(UserDTO userDTO) throws NameNotFoundException;
+	ResponseAPICustom update(UserDTO userDTO);
 
-	List<UserDTO> findByName(String name);
+	ResponseAPICustom findByName(String name);
 
-	List<UserDTO> findByAddress(String address);
+	ResponseAPICustom findByAddress(String address);
 
-	List<UserDTO> findAllBySortName();
+	ResponseAPICustom findAllBySortName();
 }
