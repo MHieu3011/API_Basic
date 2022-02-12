@@ -1,6 +1,10 @@
 package com.vccorp.service.impl;
 
 import java.util.List;
+import java.util.zip.DataFormatException;
+
+import javax.naming.NameNotFoundException;
+import javax.persistence.NoResultException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.vccorp.api.ResponseAPICustom;
 import com.vccorp.dao.UserDAO;
 import com.vccorp.dto.UserDTO;
+import com.vccorp.exception.AddressNotFoundException;
+import com.vccorp.exception.DataExistException;
 import com.vccorp.model.UserModel;
 import com.vccorp.service.UserService;
 
@@ -17,7 +23,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDAO userDAO;
 
-	private static final String USERNF = "User not found";
 	private static final String SUCCESS = "Success";
 
 	@Override
@@ -25,7 +30,7 @@ public class UserServiceImpl implements UserService {
 		ResponseAPICustom response;
 		List<UserModel> users = userDAO.findAll();
 		if (users.isEmpty()) {
-			response = new ResponseAPICustom(0, USERNF, 404, "");
+			throw new NoResultException();
 		} else {
 			response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		}
@@ -42,34 +47,31 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseAPICustom save(UserDTO userDTO) {
+	public ResponseAPICustom save(UserDTO userDTO)
+			throws NameNotFoundException, AddressNotFoundException, DataFormatException, DataExistException {
 		ResponseAPICustom response;
 		String str = "[a-zA-Z0-9]";
 		if (userDTO.getName().isEmpty()) {
-			response = new ResponseAPICustom(0, "Name not empty", 900, "");
-			return response;
+			throw new NameNotFoundException();
 		}
 		if (!userDTO.getName().matches(str)) {
-			response = new ResponseAPICustom(0, "Name không được chứa ký tự đặc biệt", 900, userDTO.getName());
-			return response;
+			throw new DataFormatException();
 		}
 		if (userDTO.getAddress().isEmpty()) {
-			response = new ResponseAPICustom(0, "Address not empty", 900, "");
-			return response;
+			throw new AddressNotFoundException();
 		}
 		if (userDTO.getAge() < 1 || userDTO.getAge() > 100) {
-			response = new ResponseAPICustom(0, "0 < age < 100", 900, "");
-			return response;
+			throw new DataFormatException();
 		}
 		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
-		if (checkEmail(email, users)) { // user da ton tai tra ve user cu
-			UserModel model = userDAO.findOneByEmail(email);
-			response = new ResponseAPICustom(0, "User da ton tai", 902, model);
-		} else { // them user moi
-			UserModel model = userDAO.save(userDTO);
-			response = new ResponseAPICustom(1, SUCCESS, 200, model);
+		if (checkEmail(email, users)) { // user da ton tai
+			throw new DataExistException();
 		}
+		// them user moi
+		UserModel model = userDAO.save(userDTO);
+		response = new ResponseAPICustom(1, SUCCESS, 200, model);
+
 		return response;
 	}
 
@@ -81,25 +83,27 @@ public class UserServiceImpl implements UserService {
 			userDAO.delete(email);
 			response = new ResponseAPICustom(1, SUCCESS, 200, email);
 		} else { // no user -> error
-			response = new ResponseAPICustom(0, USERNF, 404, email);
+			throw new NoResultException();
 		}
 		return response;
 	}
 
 	@Override
-	public ResponseAPICustom update(UserDTO userDTO) {
+	public ResponseAPICustom update(UserDTO userDTO)
+			throws NameNotFoundException, AddressNotFoundException, DataFormatException {
 		ResponseAPICustom response;
+		String str = "[a-zA-Z0-9]";
 		if (userDTO.getName().isEmpty()) {
-			response = new ResponseAPICustom(0, "Name not empty", 900, "");
-			return response;
+			throw new NameNotFoundException();
+		}
+		if (!userDTO.getName().matches(str)) {
+			throw new DataFormatException();
 		}
 		if (userDTO.getAddress().isEmpty()) {
-			response = new ResponseAPICustom(0, "Address not empty", 900, "");
-			return response;
+			throw new AddressNotFoundException();
 		}
 		if (userDTO.getAge() < 1 || userDTO.getAge() > 100) {
-			response = new ResponseAPICustom(0, "0 < age < 100", 900, "");
-			return response;
+			throw new DataFormatException();
 		}
 		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
@@ -107,7 +111,7 @@ public class UserServiceImpl implements UserService {
 			UserModel model = userDAO.update(userDTO);
 			response = new ResponseAPICustom(1, SUCCESS, 200, model);
 		} else { // chua ton tai user -> error
-			response = new ResponseAPICustom(0, USERNF, 404, userDTO);
+			throw new NoResultException();
 		}
 		return response;
 	}
@@ -117,7 +121,7 @@ public class UserServiceImpl implements UserService {
 		ResponseAPICustom response;
 		List<UserModel> users = userDAO.findByName(name);
 		if (users.isEmpty()) {
-			response = new ResponseAPICustom(0, USERNF, 404, name);
+			throw new NoResultException();
 		} else {
 			response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		}
@@ -129,7 +133,7 @@ public class UserServiceImpl implements UserService {
 		ResponseAPICustom response;
 		List<UserModel> users = userDAO.findByAddress(address);
 		if (users.isEmpty()) {
-			response = new ResponseAPICustom(0, USERNF, 404, address);
+			throw new NoResultException();
 		} else {
 			response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		}
@@ -141,7 +145,7 @@ public class UserServiceImpl implements UserService {
 		ResponseAPICustom response;
 		List<UserModel> users = userDAO.findAllBySortName();
 		if (users.isEmpty()) {
-			response = new ResponseAPICustom(0, USERNF, 404, "");
+			throw new NoResultException();
 		} else {
 			response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		}

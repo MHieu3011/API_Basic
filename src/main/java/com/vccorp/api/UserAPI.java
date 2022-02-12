@@ -1,5 +1,7 @@
 package com.vccorp.api;
 
+import java.util.zip.DataFormatException;
+
 import javax.naming.NameNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.vccorp.dto.UserDTO;
+import com.vccorp.exception.AddressNotFoundException;
+import com.vccorp.exception.DataExistException;
 import com.vccorp.service.UserService;
 
 @RestController
@@ -29,7 +33,8 @@ public class UserAPI {
 	private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<String> save(@RequestBody UserDTO userDTO)
+			throws NameNotFoundException, AddressNotFoundException, DataFormatException, DataExistException {
 		return new ResponseEntity<>(gson.toJson(userService.save(userDTO)), HttpStatus.OK);
 	}
 
@@ -39,7 +44,8 @@ public class UserAPI {
 	}
 
 	@PutMapping
-	public ResponseEntity<String> update(@RequestBody UserDTO userDTO) throws NameNotFoundException {
+	public ResponseEntity<String> update(@RequestBody UserDTO userDTO)
+			throws NameNotFoundException, AddressNotFoundException, DataFormatException {
 		return new ResponseEntity<>(gson.toJson(userService.update(userDTO)), HttpStatus.OK);
 	}
 
