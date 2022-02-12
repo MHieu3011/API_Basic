@@ -31,9 +31,8 @@ public class UserServiceImpl implements UserService {
 		List<UserModel> users = userDAO.findAll();
 		if (users.isEmpty()) {
 			throw new NoResultException();
-		} else {
-			response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		}
+		response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		return response;
 	}
 
@@ -71,7 +70,6 @@ public class UserServiceImpl implements UserService {
 		// them user moi
 		UserModel model = userDAO.save(userDTO);
 		response = new ResponseAPICustom(1, SUCCESS, 200, model);
-
 		return response;
 	}
 
@@ -82,10 +80,10 @@ public class UserServiceImpl implements UserService {
 		if (checkEmail(email, users)) { // user da ton tai -> delete
 			userDAO.delete(email);
 			response = new ResponseAPICustom(1, SUCCESS, 200, email);
-		} else { // no user -> error
-			throw new NoResultException();
+			return response;
 		}
-		return response;
+		// no user -> error
+		throw new NoResultException();
 	}
 
 	@Override
@@ -110,10 +108,10 @@ public class UserServiceImpl implements UserService {
 		if (checkEmail(email, users)) { // user da ton tai thi update
 			UserModel model = userDAO.update(userDTO);
 			response = new ResponseAPICustom(1, SUCCESS, 200, model);
-		} else { // chua ton tai user -> error
-			throw new NoResultException();
+			return response;
 		}
-		return response;
+		// chua ton tai user -> error
+		throw new NoResultException();
 	}
 
 	@Override
@@ -122,10 +120,10 @@ public class UserServiceImpl implements UserService {
 		List<UserModel> users = userDAO.findByName(name);
 		if (users.isEmpty()) {
 			throw new NoResultException();
-		} else {
-			response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		}
+		response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		return response;
+
 	}
 
 	@Override
@@ -134,9 +132,8 @@ public class UserServiceImpl implements UserService {
 		List<UserModel> users = userDAO.findByAddress(address);
 		if (users.isEmpty()) {
 			throw new NoResultException();
-		} else {
-			response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		}
+		response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		return response;
 	}
 
@@ -146,9 +143,8 @@ public class UserServiceImpl implements UserService {
 		List<UserModel> users = userDAO.findAllBySortName();
 		if (users.isEmpty()) {
 			throw new NoResultException();
-		} else {
-			response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		}
+		response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		return response;
 	}
 }
