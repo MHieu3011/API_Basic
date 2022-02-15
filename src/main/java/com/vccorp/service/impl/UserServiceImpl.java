@@ -1,5 +1,6 @@
 package com.vccorp.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
@@ -115,9 +116,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseAPICustom findByName(String name) {
+	public ResponseAPICustom findAllByName(String name) {
 		ResponseAPICustom response;
-		List<UserModel> users = userDAO.findByName(name);
+		List<UserModel> users = userDAO.findAllByName(name);
 		if (users.isEmpty()) {
 			throw new NoResultException();
 		}
@@ -147,4 +148,43 @@ public class UserServiceImpl implements UserService {
 		response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		return response;
 	}
+
+	@Override
+	public ResponseAPICustom findAllByStartName(String startName) {
+		ResponseAPICustom response;
+		String parameter = startName + "%";
+		List<UserModel> users = userDAO.findAllByLikeName(parameter);
+		if (users.isEmpty()) {
+			throw new NoResultException();
+		}
+		response = new ResponseAPICustom(1, SUCCESS, 200, users);
+		return response;
+	}
+
+	@Override
+	public ResponseAPICustom findAllByInName(String inName) {
+		ResponseAPICustom response;
+		String parameter = "%" + inName + "%";
+		List<UserModel> users = userDAO.findAllByLikeName(parameter);
+		if (users.isEmpty()) {
+			throw new NoResultException();
+		}
+		response = new ResponseAPICustom(1, SUCCESS, 200, users);
+		return response;
+	}
+
+	@Override
+	public ResponseAPICustom findAllByListID(long[] ids) {
+		if (ids.length == 0) {
+			throw new NoResultException();
+		}
+		ResponseAPICustom response;
+		List<UserModel> users = new ArrayList<>();
+		for (long id : ids) {
+			users.add(userDAO.findOneById(id));
+		}
+		response = new ResponseAPICustom(1, SUCCESS, 200, users);
+		return response;
+	}
+
 }

@@ -14,21 +14,21 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 
 	@Override
 	public UserModel findOneById(Long id) {
-		String sql = "SELECT * FROM user WHERE id = ?";
+		String sql = "SELECT id, name, address, age, email FROM user WHERE id = ?";
 		List<UserModel> users = query(sql, new UserMapper(), id);
 		return users.isEmpty() ? null : users.get(0);
 	}
 
 	@Override
 	public UserModel findOneByEmail(String email) {
-		String sql = "SELECT * FROM user WHERE email = ?";
+		String sql = "SELECT id, name, address, age, email FROM user WHERE email = ?";
 		List<UserModel> users = query(sql, new UserMapper(), email);
 		return users.isEmpty() ? null : users.get(0);
 	}
 
 	@Override
 	public List<UserModel> findAll() {
-		String sql = "SELECT * FROM user";
+		String sql = "SELECT id, name, address, age, email FROM user";
 		return query(sql, new UserMapper());
 	}
 
@@ -56,21 +56,27 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 	}
 
 	@Override
-	public List<UserModel> findByName(String name) {
-		String sql = "SELECT * FROM user WHERE name = ?";
+	public List<UserModel> findAllByName(String name) {
+		String sql = "SELECT id, name, address, age, email FROM user WHERE name = ?";
 		return query(sql, new UserMapper(), name);
 	}
 
 	@Override
 	public List<UserModel> findByAddress(String address) {
-		String sql = "SELECT * FROM user WHERE address = ?";
+		String sql = "SELECT id, name, address, age, email FROM user WHERE address = ?";
 		return query(sql, new UserMapper(), address);
 	}
 
 	@Override
 	public List<UserModel> findAllBySortName() {
-		String sql = "SELECT * FROM user ORDER BY name ASC";
+		String sql = "SELECT id, name, address, age, email FROM user ORDER BY name ASC";
 		return query(sql, new UserMapper());
+	}
+
+	@Override
+	public List<UserModel> findAllByLikeName(String name) {
+		String sql = "SELECT id, name, address, age, email FROM user WHERE name LIKE ?";
+		return query(sql, new UserMapper(), name);
 	}
 
 }

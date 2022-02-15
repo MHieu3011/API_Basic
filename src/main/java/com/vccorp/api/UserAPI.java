@@ -51,7 +51,7 @@ public class UserAPI {
 
 	@GetMapping(params = "name")
 	public ResponseEntity<String> findByName(@RequestParam String name) {
-		return new ResponseEntity<>(gson.toJson(userService.findByName(name)), HttpStatus.OK);
+		return new ResponseEntity<>(gson.toJson(userService.findAllByName(name)), HttpStatus.OK);
 	}
 
 	@GetMapping(params = "address")
@@ -63,4 +63,20 @@ public class UserAPI {
 	public ResponseEntity<String> findAllBySortName() {
 		return new ResponseEntity<>(gson.toJson(userService.findAllBySortName()), HttpStatus.OK);
 	}
+
+	@GetMapping(params = "startname")
+	public ResponseEntity<String> findAllByNameStart(@RequestParam String startname) {
+		return new ResponseEntity<>(gson.toJson(userService.findAllByStartName(startname)), HttpStatus.OK);
+	}
+
+	@GetMapping(params = "inname")
+	public ResponseEntity<String> findAllByInName(@RequestParam String inname) {
+		return new ResponseEntity<>(gson.toJson(userService.findAllByInName(inname)), HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/ids")
+	public ResponseEntity<String> findAllByListID(@RequestBody UserDTO userDTO) {
+		return new ResponseEntity<>(gson.toJson(userService.findAllByListID(userDTO.getIds())), HttpStatus.OK);
+	}
+
 }

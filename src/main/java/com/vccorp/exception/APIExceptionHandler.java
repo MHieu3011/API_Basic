@@ -13,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import com.vccorp.api.ResponseAPICustom;
 
 @RestControllerAdvice
-public class ApiExceptionHandler {
+public class APIExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseAPICustom handlerAllException(Exception ex, WebRequest request) {
@@ -22,7 +22,7 @@ public class ApiExceptionHandler {
 
 	@ExceptionHandler(SQLException.class)
 	public ResponseAPICustom sqlException(SQLException ex, WebRequest request) {
-		return new ResponseAPICustom(0, "SQL Exception", ex.getErrorCode(), "");
+		return new ResponseAPICustom(0, "SQL Exception", 901, "");
 	}
 
 	@ExceptionHandler(NoResultException.class)
@@ -31,7 +31,7 @@ public class ApiExceptionHandler {
 	}
 
 	@ExceptionHandler(DataFormatException.class)
-	public ResponseAPICustom notEmptyException(DataFormatException ex, WebRequest request) {
+	public ResponseAPICustom dataFormatException(DataFormatException ex, WebRequest request) {
 		return new ResponseAPICustom(0, "Dữ liệu nhập vào không đúng ràng buộc", 900, "");
 	}
 
@@ -46,8 +46,8 @@ public class ApiExceptionHandler {
 	}
 
 	@ExceptionHandler(AddressNotFoundException.class)
-	public ResponseAPICustom dataFormatException(AddressNotFoundException ex, WebRequest request) {
-		return new ResponseAPICustom(0, "Address not empty EXCEPTION", 504, "");
+	public ResponseAPICustom addressNotFoundException(AddressNotFoundException ex, WebRequest request) {
+		return new ResponseAPICustom(0, "Address not found EXCEPTION", 504, "");
 	}
 
 }

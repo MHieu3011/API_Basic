@@ -19,9 +19,11 @@ public interface UserDAO {
 
 	UserModel update(UserDTO userDTO);
 
-	List<UserModel> findByName(String name);
+	List<UserModel> findAllByName(String name);
 
 	List<UserModel> findByAddress(String address);
 
 	List<UserModel> findAllBySortName();
+
+	List<UserModel> findAllByLikeName(String name);
 }

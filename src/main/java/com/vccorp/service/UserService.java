@@ -21,9 +21,15 @@ public interface UserService {
 	ResponseAPICustom update(UserDTO userDTO)
 			throws NameNotFoundException, AddressNotFoundException, DataFormatException;
 
-	ResponseAPICustom findByName(String name);
+	ResponseAPICustom findAllByName(String name);
 
 	ResponseAPICustom findByAddress(String address);
 
 	ResponseAPICustom findAllBySortName();
+
+	ResponseAPICustom findAllByStartName(String startName);
+
+	ResponseAPICustom findAllByInName(String inName);
+
+	ResponseAPICustom findAllByListID(long[] ids);
 }
