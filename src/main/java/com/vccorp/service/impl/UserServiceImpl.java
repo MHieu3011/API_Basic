@@ -1,6 +1,5 @@
 package com.vccorp.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
@@ -164,8 +163,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResponseAPICustom findAllByInName(String inName) {
 		ResponseAPICustom response;
-		String parameter = "%" + inName + "%";
-		List<UserModel> users = userDAO.findAllByLikeName(parameter);
+		List<UserModel> users = userDAO.findAllByMatchName(inName);
 		if (users.isEmpty()) {
 			throw new NoResultException();
 		}
@@ -179,10 +177,11 @@ public class UserServiceImpl implements UserService {
 			throw new NoResultException();
 		}
 		ResponseAPICustom response;
-		List<UserModel> users = new ArrayList<>();
-		for (long id : ids) {
-			users.add(userDAO.findOneById(id));
+		StringBuilder result = new StringBuilder("id = " + ids[0]);
+		for (int i = 1; i < ids.length; i++) {
+			result.append(" OR id = " + ids[i]);
 		}
+		List<UserModel> users = userDAO.findAllByListID(result.toString());
 		response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		return response;
 	}

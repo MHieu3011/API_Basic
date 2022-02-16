@@ -79,4 +79,16 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 		return query(sql, new UserMapper(), name);
 	}
 
+	@Override
+	public List<UserModel> findAllByMatchName(String name) {
+		String sql = "SELECT id, name, address, age, email FROM user WHERE MATCH(name) AGAINST (?)";
+		return query(sql, new UserMapper(), name);
+	}
+
+	@Override
+	public List<UserModel> findAllByListID(String ids) {
+		String sql = "SELECT id, name, address, age, email FROM user WHERE " + ids;
+		return query(sql, new UserMapper());
+	}
+
 }

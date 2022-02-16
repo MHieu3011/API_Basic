@@ -71,6 +71,13 @@ public class InsertUserWithBatch {
 			statement.executeBatch();
 			connection.commit();
 		} catch (SQLException e) {
+			try {
+				if (connection != null) {
+					connection.rollback();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 		} finally {
 			if (connection != null) {

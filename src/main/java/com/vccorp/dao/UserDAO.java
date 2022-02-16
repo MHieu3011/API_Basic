@@ -26,4 +26,8 @@ public interface UserDAO {
 	List<UserModel> findAllBySortName();
 
 	List<UserModel> findAllByLikeName(String name);
+
+	List<UserModel> findAllByMatchName(String name);
+
+	List<UserModel> findAllByListID(String ids);
 }
