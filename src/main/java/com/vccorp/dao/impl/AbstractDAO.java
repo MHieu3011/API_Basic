@@ -25,6 +25,11 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 					statement.setString(index, (String) parameter);
 				} else if (parameter instanceof Integer) {
 					statement.setInt(index, (Integer) parameter);
+				} else if (parameter instanceof long[]) {
+					long[] l = (long[]) parameter;
+					for (int j = 0; j < l.length; j++) {
+						statement.setLong(index + j, l[j]);
+					}
 				}
 			}
 		} catch (SQLException e) {

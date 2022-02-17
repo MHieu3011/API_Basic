@@ -177,11 +177,12 @@ public class UserServiceImpl implements UserService {
 			throw new NoResultException();
 		}
 		ResponseAPICustom response;
-		StringBuilder result = new StringBuilder("id = " + ids[0]);
+		StringBuilder s = new StringBuilder("(");
 		for (int i = 1; i < ids.length; i++) {
-			result.append(" OR id = " + ids[i]);
+			s.append("?, ");
 		}
-		List<UserModel> users = userDAO.findAllByListID(result.toString());
+		s.append("?)");
+		List<UserModel> users = userDAO.findAllByListID(s.toString(), ids);
 		response = new ResponseAPICustom(1, SUCCESS, 200, users);
 		return response;
 	}

@@ -86,9 +86,9 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 	}
 
 	@Override
-	public List<UserModel> findAllByListID(String ids) {
-		String sql = "SELECT id, name, address, age, email FROM user WHERE " + ids;
-		return query(sql, new UserMapper());
+	public List<UserModel> findAllByListID(String s, long[] ids) {
+		String sql = "SELECT id, name, address, age, email FROM user WHERE id IN " + s;
+		return query(sql, new UserMapper(), ids);
 	}
 
 }

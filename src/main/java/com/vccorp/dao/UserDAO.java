@@ -29,5 +29,5 @@ public interface UserDAO {
 
 	List<UserModel> findAllByMatchName(String name);
 
-	List<UserModel> findAllByListID(String ids);
+	List<UserModel> findAllByListID(String s, long[] ids);
 }
