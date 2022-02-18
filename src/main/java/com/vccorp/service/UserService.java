@@ -32,4 +32,8 @@ public interface UserService {
 	ResponseAPICustom findAllByInName(String inName);
 
 	ResponseAPICustom findAllByListID(long[] ids);
+
+	ResponseAPICustom addMoney(Long id, Long moneyAdd);
+
+	ResponseAPICustom transMoney(Long idA, Long idB, Long money);
 }

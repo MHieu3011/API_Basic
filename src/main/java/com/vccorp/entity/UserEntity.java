@@ -20,6 +20,9 @@ public class UserEntity extends BaseEntity {
 	@Column
 	private String email;
 
+	@Column
+	private Long money;
+
 	public String getName() {
 		return name;
 	}
@@ -50,6 +53,14 @@ public class UserEntity extends BaseEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Long getMoney() {
+		return money;
+	}
+
+	public void setMoney(Long money) {
+		this.money = money;
 	}
 
 }

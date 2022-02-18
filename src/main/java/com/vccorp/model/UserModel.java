@@ -6,6 +6,7 @@ public class UserModel extends AbstractModel {
 	private String address;
 	private Integer age;
 	private String email;
+	private Long money;
 
 	public String getName() {
 		return name;
@@ -37,6 +38,14 @@ public class UserModel extends AbstractModel {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Long getMoney() {
+		return money;
+	}
+
+	public void setMoney(Long money) {
+		this.money = money;
 	}
 
 }

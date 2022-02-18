@@ -187,4 +187,28 @@ public class UserServiceImpl implements UserService {
 		return response;
 	}
 
+	@Override
+	public ResponseAPICustom addMoney(Long id, Long moneyAdd) {
+		UserModel user = userDAO.findOneById(id);
+		if (user == null) {
+			throw new NoResultException();
+		}
+		Long moneyNew = user.getMoney() + moneyAdd;
+		user = userDAO.addMoney(id, moneyNew);
+		return new ResponseAPICustom(1, SUCCESS, 200, user);
+	}
+
+	@Override
+	public ResponseAPICustom transMoney(Long idA, Long idB, Long money) {
+		UserModel userA = userDAO.findOneById(idA);
+		UserModel userB = userDAO.findOneById(idB);
+		if (userA == null || userB == null) {
+			throw new NoResultException();
+		}
+		Long moneyA = userA.getMoney() - money;
+		Long moneyB = userB.getMoney() + money;
+		List<UserModel> users = userDAO.transMoney(idA, idB, moneyA, moneyB);
+		return new ResponseAPICustom(1, SUCCESS, 200, users);
+	}
+
 }

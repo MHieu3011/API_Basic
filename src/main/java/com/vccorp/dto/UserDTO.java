@@ -19,6 +19,8 @@ public class UserDTO extends AbstractDTO {
 	@NotEmpty
 	private String email;
 
+	private Long money;
+
 	public String getName() {
 		return name;
 	}
@@ -49,6 +51,14 @@ public class UserDTO extends AbstractDTO {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Long getMoney() {
+		return money;
+	}
+
+	public void setMoney(Long money) {
+		this.money = money;
 	}
 
 }

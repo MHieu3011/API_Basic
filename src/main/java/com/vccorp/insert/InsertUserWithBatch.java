@@ -37,14 +37,15 @@ public class InsertUserWithBatch {
 
 	private static List<UserDTO> init() {
 		List<UserDTO> users = new ArrayList<>();
-		for (long i = 0; i < 100; i++) {
+		for (long i = 0; i < 300; i++) {
 			UserDTO user = new UserDTO();
-			String str = "4" + randomString.nextString();
+			String str = randomString.nextString();
 			Integer age = randomInt.nextInt(99) + 1;
 			user.setName(str);
 			user.setAddress("Dia chi: " + str);
 			user.setAge(age);
 			user.setEmail(str + "@email.com");
+			user.setMoney((long) 1000);
 			users.add(user);
 		}
 		return users;
@@ -55,13 +56,13 @@ public class InsertUserWithBatch {
 		PreparedStatement statement = null;
 		try {
 			connection = HikariConfiguration.getInstance().getConnection();
-			String sql = "INSERT INTO user(name, address, age, email) VALUES(?, ?, ?, ?)";
+			String sql = "INSERT INTO user(name, address, age, email, money) VALUES(?, ?, ?, ?, ?)";
 			statement = connection.prepareStatement(sql);
 			connection.setAutoCommit(false);
 			List<UserDTO> users = init();
 			for (int i = 0; i < users.size(); i++) {
 				setParameters(statement, users.get(i).getName(), users.get(i).getAddress(), users.get(i).getAge(),
-						users.get(i).getEmail());
+						users.get(i).getEmail(), users.get(i).getMoney());
 				statement.addBatch();
 				if (i % batchSize == 0) {
 					statement.executeBatch();
@@ -98,6 +99,6 @@ public class InsertUserWithBatch {
 	}
 
 	public static void main(String[] args) {
-		insertWithBatch(1000);
+		insertWithBatch(20);
 	}
 }

@@ -17,6 +17,7 @@ public class UserMapper implements RowMapper<UserModel> {
 			model.setAddress(resultSet.getString("address"));
 			model.setAge(resultSet.getInt("age"));
 			model.setEmail(resultSet.getString("email"));
+			model.setMoney(resultSet.getLong("money"));
 			return model;
 		} catch (SQLException e) {
 			return null;

@@ -79,4 +79,13 @@ public class UserAPI {
 		return new ResponseEntity<>(gson.toJson(userService.findAllByListID(userDTO.getIds())), HttpStatus.OK);
 	}
 
+	@PutMapping(params = { "id", "moneyadd" })
+	public ResponseEntity<String> addMoney(@RequestParam Long id, @RequestParam Long moneyadd) {
+		return new ResponseEntity<>(gson.toJson(userService.addMoney(id, moneyadd)), HttpStatus.OK);
+	}
+
+	@PutMapping(params = { "ida", "idb", "money" })
+	public ResponseEntity<String> transMoney(@RequestParam Long ida, @RequestParam Long idb, @RequestParam Long money) {
+		return new ResponseEntity<>(gson.toJson(userService.transMoney(ida, idb, money)), HttpStatus.OK);
+	}
 }

@@ -30,4 +30,8 @@ public interface UserDAO {
 	List<UserModel> findAllByMatchName(String name);
 
 	List<UserModel> findAllByListID(String s, long[] ids);
+
+	UserModel addMoney(Long id, Long moneyAdd);
+
+	List<UserModel> transMoney(Long idA, Long idB, Long moneyA, Long moneyB);
 }
