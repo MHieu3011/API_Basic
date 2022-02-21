@@ -8,6 +8,7 @@ import com.vccorp.api.ResponseAPICustom;
 import com.vccorp.dto.UserDTO;
 import com.vccorp.exception.AddressNotFoundException;
 import com.vccorp.exception.DataExistException;
+import com.vccorp.exception.NotEnoughMoneyException;
 
 public interface UserService {
 
@@ -35,5 +36,6 @@ public interface UserService {
 
 	ResponseAPICustom addMoney(Long id, Long moneyAdd);
 
-	ResponseAPICustom transMoney(Long idA, Long idB, Long money);
+	ResponseAPICustom transMoney(Long idA, Long idB, Long money) throws NotEnoughMoneyException;
+
 }

@@ -101,7 +101,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 	}
 
 	@Override
-	public List<UserModel> transMoney(Long idA, Long idB, Long moneyA, Long moneyB) {
+	public synchronized List<UserModel> transMoney(Long idA, Long idB, Long moneyA, Long moneyB) {
 		String sql1 = "UPDATE user SET money = ? WHERE id = ? ";
 		update(sql1, moneyA, idA);
 		update(sql1, moneyB, idB);

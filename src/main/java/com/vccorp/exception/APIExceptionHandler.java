@@ -22,7 +22,7 @@ public class APIExceptionHandler {
 
 	@ExceptionHandler(SQLException.class)
 	public ResponseAPICustom sqlException(SQLException ex, WebRequest request) {
-		return new ResponseAPICustom(0, "SQL Exception", 901, "");
+		return new ResponseAPICustom(0, "SQL EXCEPTION", 901, "");
 	}
 
 	@ExceptionHandler(NoResultException.class)
@@ -48,6 +48,11 @@ public class APIExceptionHandler {
 	@ExceptionHandler(AddressNotFoundException.class)
 	public ResponseAPICustom addressNotFoundException(AddressNotFoundException ex, WebRequest request) {
 		return new ResponseAPICustom(0, "Address not found EXCEPTION", 504, "");
+	}
+
+	@ExceptionHandler(NotEnoughMoneyException.class)
+	public ResponseAPICustom notEnoughMoneyException(NotEnoughMoneyException ex, WebRequest request) {
+		return new ResponseAPICustom(0, "Not Enough Money EXCEPTION", 505, "");
 	}
 
 }

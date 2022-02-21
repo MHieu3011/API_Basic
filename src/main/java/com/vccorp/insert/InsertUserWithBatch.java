@@ -45,7 +45,7 @@ public class InsertUserWithBatch {
 			user.setAddress("Dia chi: " + str);
 			user.setAge(age);
 			user.setEmail(str + "@email.com");
-			user.setMoney((long) 1000);
+			user.setMoney((long) 5000);
 			users.add(user);
 		}
 		return users;
