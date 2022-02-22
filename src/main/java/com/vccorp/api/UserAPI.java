@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import com.vccorp.dto.UserDTO;
 import com.vccorp.exception.AddressNotFoundException;
 import com.vccorp.exception.DataExistException;
+import com.vccorp.exception.MoneyAException;
 import com.vccorp.exception.NotEnoughMoneyException;
 import com.vccorp.service.UserService;
 
@@ -87,7 +88,7 @@ public class UserAPI {
 
 	@PutMapping(params = { "ida", "idb", "money" })
 	public ResponseEntity<String> transMoney(@RequestParam Long ida, @RequestParam Long idb, @RequestParam Long money)
-			throws NotEnoughMoneyException {
+			throws NotEnoughMoneyException, MoneyAException {
 		return new ResponseEntity<>(gson.toJson(userService.transMoney(ida, idb, money)), HttpStatus.OK);
 	}
 }

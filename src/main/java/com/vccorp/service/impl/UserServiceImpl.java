@@ -14,6 +14,7 @@ import com.vccorp.dao.UserDAO;
 import com.vccorp.dto.UserDTO;
 import com.vccorp.exception.AddressNotFoundException;
 import com.vccorp.exception.DataExistException;
+import com.vccorp.exception.MoneyAException;
 import com.vccorp.exception.NotEnoughMoneyException;
 import com.vccorp.model.UserModel;
 import com.vccorp.service.UserService;
@@ -199,14 +200,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseAPICustom transMoney(Long idA, Long idB, Long money) throws NotEnoughMoneyException {
+	public ResponseAPICustom transMoney(Long idA, Long idB, Long money)
+			throws NotEnoughMoneyException, MoneyAException {
 		UserModel userA = userDAO.findOneById(idA);
 		UserModel userB = userDAO.findOneById(idB);
 		if (userA == null || userB == null) {
 			throw new NoResultException();
 		}
 		if (userA.getMoney() < money) {
-			throw new NotEnoughMoneyException();
+			throw new MoneyAException();
 		}
 		List<UserModel> users = userDAO.transMoney(idA, idB, money);
 		return new ResponseAPICustom(1, SUCCESS, 200, users);

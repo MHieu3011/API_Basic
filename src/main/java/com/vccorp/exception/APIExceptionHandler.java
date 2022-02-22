@@ -55,4 +55,9 @@ public class APIExceptionHandler {
 		return new ResponseAPICustom(0, "Not Enough Money EXCEPTION", 505, "");
 	}
 
+	@ExceptionHandler(MoneyAException.class)
+	public ResponseAPICustom moneyAException(MoneyAException ex, WebRequest request) {
+		return new ResponseAPICustom(0, "\"Money A\" smaller trans money EXCEPTION", 506, "");
+	}
+
 }

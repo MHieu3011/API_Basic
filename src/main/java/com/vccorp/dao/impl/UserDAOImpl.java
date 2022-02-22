@@ -103,7 +103,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 	@Override
 	public List<UserModel> transMoney(Long idA, Long idB, Long money) {
 		String sql1 = "UPDATE user SET money = money - ? WHERE id = ? ";
-		update(sql1, money, idA);
+		update(sql1, money, idA, idA);
 		String sql2 = "UPDATE user SET money = money + ? WHERE id = ? ";
 		update(sql2, money, idB);
 		String sql = "SELECT id, name, address, age, email, money FROM user WHERE id IN (?, ?)";
