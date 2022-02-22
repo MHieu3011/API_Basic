@@ -31,7 +31,7 @@ public interface UserDAO {
 
 	List<UserModel> findAllByListID(String s, long[] ids);
 
-	UserModel addMoney(Long id, Long moneyAdd);
+	UserModel addMoney(Long id, Long money);
 
-	List<UserModel> transMoney(Long idA, Long idB, Long moneyA, Long moneyB);
+	List<UserModel> transMoney(Long idA, Long idB, Long money);
 }

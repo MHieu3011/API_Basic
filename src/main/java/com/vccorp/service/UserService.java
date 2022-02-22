@@ -34,7 +34,7 @@ public interface UserService {
 
 	ResponseAPICustom findAllByListID(long[] ids);
 
-	ResponseAPICustom addMoney(Long id, Long moneyAdd);
+	ResponseAPICustom addMoney(Long id, Long money);
 
 	ResponseAPICustom transMoney(Long idA, Long idB, Long money) throws NotEnoughMoneyException;
 

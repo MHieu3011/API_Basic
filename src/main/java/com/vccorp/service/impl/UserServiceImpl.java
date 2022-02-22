@@ -8,7 +8,6 @@ import javax.persistence.NoResultException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.vccorp.api.ResponseAPICustom;
 import com.vccorp.dao.UserDAO;
@@ -48,7 +47,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public ResponseAPICustom save(UserDTO userDTO)
 			throws NameNotFoundException, AddressNotFoundException, DataFormatException, DataExistException {
 		ResponseAPICustom response;
@@ -77,7 +75,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public ResponseAPICustom delete(String email) {
 		ResponseAPICustom response;
 		List<UserModel> users = userDAO.findAll();
@@ -91,7 +88,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public ResponseAPICustom update(UserDTO userDTO)
 			throws NameNotFoundException, AddressNotFoundException, DataFormatException {
 		ResponseAPICustom response;
@@ -193,19 +189,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
-	public ResponseAPICustom addMoney(Long id, Long moneyAdd) {
+	public ResponseAPICustom addMoney(Long id, Long money) {
 		UserModel user = userDAO.findOneById(id);
 		if (user == null) {
 			throw new NoResultException();
 		}
-		Long moneyNew = user.getMoney() + moneyAdd;
-		user = userDAO.addMoney(id, moneyNew);
+		user = userDAO.addMoney(id, money);
 		return new ResponseAPICustom(1, SUCCESS, 200, user);
 	}
 
 	@Override
-	@Transactional
 	public ResponseAPICustom transMoney(Long idA, Long idB, Long money) throws NotEnoughMoneyException {
 		UserModel userA = userDAO.findOneById(idA);
 		UserModel userB = userDAO.findOneById(idB);
@@ -215,9 +208,7 @@ public class UserServiceImpl implements UserService {
 		if (userA.getMoney() < money) {
 			throw new NotEnoughMoneyException();
 		}
-		Long moneyA = userA.getMoney() - money;
-		Long moneyB = userB.getMoney() + money;
-		List<UserModel> users = userDAO.transMoney(idA, idB, moneyA, moneyB);
+		List<UserModel> users = userDAO.transMoney(idA, idB, money);
 		return new ResponseAPICustom(1, SUCCESS, 200, users);
 	}
 

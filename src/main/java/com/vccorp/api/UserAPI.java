@@ -26,7 +26,7 @@ import com.vccorp.service.UserService;
 
 @RestController
 @RequestMapping(value = "/api-user")
-public class UserAPI extends Thread {
+public class UserAPI {
 
 	@Autowired
 	private UserService userService;
@@ -80,9 +80,9 @@ public class UserAPI extends Thread {
 		return new ResponseEntity<>(gson.toJson(userService.findAllByListID(userDTO.getIds())), HttpStatus.OK);
 	}
 
-	@PutMapping(params = { "id", "moneyadd" })
-	public ResponseEntity<String> addMoney(@RequestParam Long id, @RequestParam Long moneyadd) {
-		return new ResponseEntity<>(gson.toJson(userService.addMoney(id, moneyadd)), HttpStatus.OK);
+	@PutMapping(params = { "id", "money" })
+	public ResponseEntity<String> addMoney(@RequestParam Long id, @RequestParam Long money) {
+		return new ResponseEntity<>(gson.toJson(userService.addMoney(id, money)), HttpStatus.OK);
 	}
 
 	@PutMapping(params = { "ida", "idb", "money" })

@@ -94,19 +94,20 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 	}
 
 	@Override
-	public UserModel addMoney(Long id, Long moneyAdd) {
-		String sql = "UPDATE user SET money = ? WHERE id = ? ";
-		update(sql, moneyAdd, id);
+	public UserModel addMoney(Long id, Long money) {
+		String sql = "UPDATE user SET money = money + ? WHERE id = ? ";
+		update(sql, money, id);
 		return findOneById(id);
 	}
 
 	@Override
-	public synchronized List<UserModel> transMoney(Long idA, Long idB, Long moneyA, Long moneyB) {
-		String sql1 = "UPDATE user SET money = ? WHERE id = ? ";
-		update(sql1, moneyA, idA);
-		update(sql1, moneyB, idB);
-		String sql2 = "SELECT id, name, address, age, email, money FROM user WHERE id IN (?, ?)";
-		return query(sql2, new UserMapper(), idA, idB);
+	public List<UserModel> transMoney(Long idA, Long idB, Long money) {
+		String sql1 = "UPDATE user SET money = money - ? WHERE id = ? ";
+		update(sql1, money, idA);
+		String sql2 = "UPDATE user SET money = money + ? WHERE id = ? ";
+		update(sql2, money, idB);
+		String sql = "SELECT id, name, address, age, email, money FROM user WHERE id IN (?, ?)";
+		return query(sql, new UserMapper(), idA, idB);
 	}
 
 }
