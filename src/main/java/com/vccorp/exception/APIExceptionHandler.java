@@ -57,7 +57,7 @@ public class APIExceptionHandler {
 
 	@ExceptionHandler(MoneyAException.class)
 	public ResponseAPICustom moneyAException(MoneyAException ex, WebRequest request) {
-		return new ResponseAPICustom(0, "\"Money A\" smaller trans money EXCEPTION", 506, "");
+		return new ResponseAPICustom(0, "'Money A' smaller trans money EXCEPTION", 506, "");
 	}
 
 }

@@ -11,4 +11,5 @@ public interface GenericDAO<T> {
 	Long insert(String sql, Object... parameters);
 
 	void update(String sql, Object... parameters);
+
 }

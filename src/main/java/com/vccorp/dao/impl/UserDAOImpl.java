@@ -1,9 +1,15 @@
 package com.vccorp.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.vccorp.configuration.HikariConfiguration;
 import com.vccorp.dao.UserDAO;
 import com.vccorp.dto.UserDTO;
 import com.vccorp.mapper.impl.UserMapper;
@@ -100,14 +106,75 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 		return findOneById(id);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public List<UserModel> transMoney(Long idA, Long idB, Long money) {
-		String sql1 = "UPDATE user SET money = money - ? WHERE id = ? ";
-		update(sql1, money, idA, idA);
-		String sql2 = "UPDATE user SET money = money + ? WHERE id = ? ";
-		update(sql2, money, idB);
-		String sql = "SELECT id, name, address, age, email, money FROM user WHERE id IN (?, ?)";
-		return query(sql, new UserMapper(), idA, idB);
+		List<UserModel> users = new ArrayList<>();
+		UserMapper mapper = new UserMapper();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = HikariConfiguration.getInstance().getConnection();
+			connection.setAutoCommit(false);
+			String sql1 = "select if(money >= ?, 1, 0) from user where id = ?";
+			statement = connection.prepareStatement(sql1);
+			statement.setLong(1, money);
+			statement.setLong(2, idA);
+			resultSet = statement.executeQuery();
+			int check = 0;
+			while (resultSet.next()) {
+				check = resultSet.getInt(1);
+			}
+			if (check != 0) {
+				String sql2 = "UPDATE user SET money = money - ? WHERE id = ?";
+				statement = connection.prepareStatement(sql2);
+				statement.setLong(1, money);
+				statement.setLong(2, idA);
+				statement.executeUpdate();
+
+				String sql3 = "UPDATE user SET money = money + ? WHERE id = ?";
+				statement = connection.prepareStatement(sql3);
+				statement.setLong(1, money);
+				statement.setLong(2, idB);
+				statement.executeUpdate();
+
+				String sql = "SELECT id, name, address, age, email, money FROM user WHERE id IN (?, ?)";
+				statement = connection.prepareStatement(sql);
+				statement.setLong(1, idA);
+				statement.setLong(2, idB);
+				resultSet = statement.executeQuery();
+				while (resultSet.next()) {
+					users.add(mapper.mapRow(resultSet));
+				}
+			}
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				if (connection != null) {
+					connection.rollback();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try {
+				if (connection != null) {
+					connection.setAutoCommit(true);
+					connection.close();
+				}
+				if (statement != null) {
+					statement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+		return users;
 	}
 
 }
