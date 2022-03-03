@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 		if (userDTO.getName().isEmpty()) {
 			throw new NameNotFoundException();
 		}
-		if (!userDTO.getName().matches(str)) {
+		if (userDTO.getName().matches(str)) {
 			throw new DataFormatException();
 		}
 		if (userDTO.getAddress().isEmpty()) {

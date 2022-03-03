@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,11 +41,57 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 
 	@Override
 	public UserModel save(UserDTO userDTO) {
-		StringBuilder sql = new StringBuilder("INSERT INTO user(name, address, age, email, money) ");
-		sql.append("VALUES(?, ?, ?, ?, ?)");
-		Long id = insert(sql.toString(), userDTO.getName(), userDTO.getAddress(), userDTO.getAge(), userDTO.getEmail(),
-				userDTO.getMoney());
-		return findOneById(id);
+		UserModel user = new UserModel();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = HikariConfiguration.getInstance().getConnection();
+			connection.setAutoCommit(false);
+			String sql = "INSERT INTO user(name, address, age, email, money) VALUES(?, ?, ?, ?, ?)";
+			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			statement.setString(1, userDTO.getName());
+			statement.setString(2, userDTO.getAddress());
+			statement.setInt(3, userDTO.getAge());
+			statement.setString(4, userDTO.getEmail());
+			statement.setLong(5, userDTO.getMoney());
+			statement.executeUpdate();
+			resultSet = statement.getGeneratedKeys();
+			while (resultSet.next()) {
+				user.setId(resultSet.getLong(1));
+			}
+			connection.commit();
+			user.setName(userDTO.getName());
+			user.setAddress(userDTO.getAddress());
+			user.setAge(userDTO.getAge());
+			user.setEmail(userDTO.getEmail());
+			user.setMoney(userDTO.getMoney());
+		} catch (SQLException e) {
+			if (connection != null) {
+				try {
+					connection.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (connection != null) {
+					connection.setAutoCommit(true);
+					connection.close();
+				}
+				if (statement != null) {
+					statement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return user;
 	}
 
 	@Override
@@ -54,13 +101,60 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 		return "delete success " + email;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public UserModel update(UserDTO userDTO) {
-		StringBuilder sql = new StringBuilder("UPDATE user SET name = ?, address = ?, ");
-		sql.append("age = ?, money = ? WHERE email = ?");
-		update(sql.toString(), userDTO.getName(), userDTO.getAddress(), userDTO.getAge(), userDTO.getMoney(),
-				userDTO.getEmail());
-		return findOneByEmail(userDTO.getEmail());
+		UserModel user = new UserModel();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		UserMapper mapper = new UserMapper();
+		try {
+			connection = HikariConfiguration.getInstance().getConnection();
+			connection.setAutoCommit(false);
+			String sql1 = "UPDATE user SET name = ?, address = ?, age = ?, money = ? WHERE email = ?";
+			statement = connection.prepareStatement(sql1);
+			statement.setString(1, userDTO.getName());
+			statement.setString(2, userDTO.getAddress());
+			statement.setInt(3, userDTO.getAge());
+			statement.setLong(4, userDTO.getMoney());
+			statement.setString(5, userDTO.getEmail());
+			statement.executeUpdate();
+
+			String sql2 = "SELECT id, name, address, age, email, money FROM user WHERE email = ?";
+			statement = connection.prepareStatement(sql2);
+			statement.setString(1, userDTO.getEmail());
+			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				user = mapper.mapRow(resultSet);
+			}
+			connection.commit();
+		} catch (SQLException e) {
+			try {
+				if (connection != null) {
+					connection.rollback();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (connection != null) {
+					connection.setAutoCommit(true);
+					connection.close();
+				}
+				if (statement != null) {
+					statement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return user;
 	}
 
 	@Override
@@ -99,11 +193,57 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 		return query(sql, new UserMapper(), ids);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public UserModel addMoney(Long id, Long money) {
-		String sql = "UPDATE user SET money = money + ? WHERE id = ? ";
-		update(sql, money, id);
-		return findOneById(id);
+		UserModel user = new UserModel();
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		UserMapper mapper = new UserMapper();
+		try {
+			connection = HikariConfiguration.getInstance().getConnection();
+			connection.setAutoCommit(false);
+			String sql1 = "UPDATE user SET money = money + ? WHERE id = ?";
+			statement = connection.prepareStatement(sql1);
+			statement.setLong(1, money);
+			statement.setLong(2, id);
+			statement.executeUpdate();
+
+			String sql2 = "SELECT id, name, address, age, email, money FROM user WHERE id = ?";
+			statement = connection.prepareStatement(sql2);
+			statement.setLong(1, id);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				user = mapper.mapRow(resultSet);
+			}
+			connection.commit();
+		} catch (SQLException e) {
+			try {
+				if (connection != null) {
+					connection.rollback();
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (connection != null) {
+					connection.setAutoCommit(true);
+					connection.close();
+				}
+				if (statement != null) {
+					statement.close();
+				}
+				if (resultSet != null) {
+					resultSet.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return user;
 	}
 
 	@SuppressWarnings("resource")
