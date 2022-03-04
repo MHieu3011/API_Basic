@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
 		if (userDTO.getAge() < 1 || userDTO.getAge() > 100) {
 			throw new DataFormatException();
 		}
+	
 		List<UserModel> users = userDAO.findAll();
 		String email = userDTO.getEmail();
 		if (checkEmail(email, users)) { // user da ton tai

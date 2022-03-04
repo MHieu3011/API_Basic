@@ -257,24 +257,15 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 		try {
 			connection = HikariConfiguration.getInstance().getConnection();
 			connection.setAutoCommit(false);
-			String sql1 = "select if(money >= ?, 1, 0) from user where id = ?";
+			String sql1 = "UPDATE user SET money = money - ? WHERE id = ? and money >= ?";
 			statement = connection.prepareStatement(sql1);
 			statement.setLong(1, money);
 			statement.setLong(2, idA);
-			resultSet = statement.executeQuery();
-			int check = 0;
-			while (resultSet.next()) {
-				check = resultSet.getInt(1);
-			}
+			statement.setLong(3, money);
+			int check = statement.executeUpdate();
 			if (check != 0) {
-				String sql2 = "UPDATE user SET money = money - ? WHERE id = ?";
+				String sql2 = "UPDATE user SET money = money + ? WHERE id = ?";
 				statement = connection.prepareStatement(sql2);
-				statement.setLong(1, money);
-				statement.setLong(2, idA);
-				statement.executeUpdate();
-
-				String sql3 = "UPDATE user SET money = money + ? WHERE id = ?";
-				statement = connection.prepareStatement(sql3);
 				statement.setLong(1, money);
 				statement.setLong(2, idB);
 				statement.executeUpdate();
@@ -287,8 +278,8 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 				while (resultSet.next()) {
 					users.add(mapper.mapRow(resultSet));
 				}
+				connection.commit();
 			}
-			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			try {

@@ -37,7 +37,7 @@ public class InsertUserWithBatch {
 
 	private static List<UserDTO> init() {
 		List<UserDTO> users = new ArrayList<>();
-		for (long i = 0; i < 301; i++) {
+		for (long i = 0; i < 2; i++) {
 			UserDTO user = new UserDTO();
 			String str = randomString.nextString();
 			Integer age = randomInt.nextInt(99) + 1;
