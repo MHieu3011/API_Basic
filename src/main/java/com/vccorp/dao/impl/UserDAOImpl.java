@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.vccorp.configuration.HikariConfiguration;
 import com.vccorp.dao.UserDAO;
@@ -66,7 +67,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 			user.setAge(userDTO.getAge());
 			user.setEmail(userDTO.getEmail());
 			user.setMoney(userDTO.getMoney());
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			if (connection != null) {
 				try {
 					connection.rollback();
@@ -129,7 +130,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 				user = mapper.mapRow(resultSet);
 			}
 			connection.commit();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			try {
 				if (connection != null) {
 					connection.rollback();
@@ -218,7 +219,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 				user = mapper.mapRow(resultSet);
 			}
 			connection.commit();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			try {
 				if (connection != null) {
 					connection.rollback();
@@ -246,6 +247,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 		return user;
 	}
 
+	@Transactional
 	@SuppressWarnings("resource")
 	@Override
 	public List<UserModel> transMoney(Long idA, Long idB, Long money) {
@@ -257,12 +259,13 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 		try {
 			connection = HikariConfiguration.getInstance().getConnection();
 			connection.setAutoCommit(false);
-			String sql1 = "UPDATE user SET money = money - ? WHERE id = ? and money >= ?";
+			String sql1 = "UPDATE user SET money = money - ? WHERE id = ? AND money >= ?";
 			statement = connection.prepareStatement(sql1);
 			statement.setLong(1, money);
 			statement.setLong(2, idA);
 			statement.setLong(3, money);
 			int check = statement.executeUpdate();
+
 			if (check != 0) {
 				String sql2 = "UPDATE user SET money = money + ? WHERE id = ?";
 				statement = connection.prepareStatement(sql2);
@@ -280,7 +283,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 				}
 				connection.commit();
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			try {
 				if (connection != null) {
