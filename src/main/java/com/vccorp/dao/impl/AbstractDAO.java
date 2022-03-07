@@ -149,4 +149,25 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		}
 	}
 
+	protected void releaseConnect(Connection connection, PreparedStatement statement, ResultSet resultSet) {
+		if (connection != null) {
+			try {
+				connection.setAutoCommit(true);
+				connection.close();
+			} catch (SQLException e) {
+			}
+		}
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+			}
+		}
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+			}
+		}
+	}
 }

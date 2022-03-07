@@ -77,20 +77,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 			}
 			e.printStackTrace();
 		} finally {
-			try {
-				if (connection != null) {
-					connection.setAutoCommit(true);
-					connection.close();
-				}
-				if (statement != null) {
-					statement.close();
-				}
-				if (resultSet != null) {
-					resultSet.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			releaseConnect(connection, statement, resultSet);
 		}
 		return user;
 	}
@@ -140,20 +127,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 			}
 			e.printStackTrace();
 		} finally {
-			try {
-				if (connection != null) {
-					connection.setAutoCommit(true);
-					connection.close();
-				}
-				if (statement != null) {
-					statement.close();
-				}
-				if (resultSet != null) {
-					resultSet.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			releaseConnect(connection, statement, resultSet);
 		}
 		return user;
 	}
@@ -229,20 +203,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 			}
 			e.printStackTrace();
 		} finally {
-			try {
-				if (connection != null) {
-					connection.setAutoCommit(true);
-					connection.close();
-				}
-				if (statement != null) {
-					statement.close();
-				}
-				if (resultSet != null) {
-					resultSet.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			releaseConnect(connection, statement, resultSet);
 		}
 		return user;
 	}
@@ -293,20 +254,7 @@ public class UserDAOImpl extends AbstractDAO<UserModel> implements UserDAO {
 				e1.printStackTrace();
 			}
 		} finally {
-			try {
-				if (connection != null) {
-					connection.setAutoCommit(true);
-					connection.close();
-				}
-				if (statement != null) {
-					statement.close();
-				}
-				if (resultSet != null) {
-					resultSet.close();
-				}
-			} catch (SQLException e2) {
-				e2.printStackTrace();
-			}
+			releaseConnect(connection, statement, resultSet);
 		}
 		return users;
 	}
